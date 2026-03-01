@@ -1,0 +1,112 @@
+---
+title: "full-citation — demonstration"
+bibliography: example.bib
+csl: chicago-author-date.csl
+
+# Make all bib entries available to citeproc, even if not cited in the body.
+nocite: "@*"
+
+# ── full-citation options (defaults shown) ────────────────────────────────────
+# Remove the auto-generated reference list at the end of the document.
+full-citation-suppress-bibliography: true
+
+# Copy PDFs to the output dir and add [PDF] links (HTML output only).
+full-citation-attachments: true
+
+# Expand every [@key] citation in the document to a full inline citation.
+full-citation-all: false
+# ─────────────────────────────────────────────────────────────────────────────
+
+filters:
+  - full-citation
+
+format:
+  html:
+    toc: true
+---
+
+This document demonstrates all three front-matter options of the
+`full-citation` extension. Each option is set in the YAML above; the
+sections below show what each one does and how they interact.
+
+## 1. `.full-citation` div
+
+Wrap `[@citekey]` in a `.full-citation` fenced div to render the full
+formatted citation in place of the div.
+
+**Entry with a URL and a PDF attachment** — produces `[online]` and `[PDF]`
+links in HTML output:
+
+:::{.full-citation}
+[@pstrossScienceAdviceTop2025]
+:::
+
+**Entry with a URL but no attached PDF** — produces `[online]` only:
+
+:::{.full-citation}
+[@goldfieldReducingSocialMedia2026]
+:::
+
+**Entry with a PDF attachment but no URL** — produces `[PDF]` only:
+
+:::{.full-citation}
+[@schillemansStrugglingOutGarbage]
+:::
+
+## 2. `ref=` attribute
+
+Use `ref=` when you do not want a cite key inside the div body. The key must
+be known to citeproc — here `nocite: "@*"` in the front matter covers it.
+
+:::{.full-citation ref="asirvathamGPTMeasurementTool2026"}
+:::
+
+:::{.full-citation ref="ImpactHumanResource"}
+:::
+
+## 3. `full-citation-all`
+
+With the current setting (`full-citation-all: false`), a regular inline
+citation like [@simonWhyPublicAdministration1998] renders as a short
+author-date string.
+
+Change the option to `full-citation-all: true` and every `[@key]` in the
+document — including the one in the sentence above — is automatically
+expanded to a full inline citation. No `.full-citation` div is needed.
+This is useful for syllabi or reading lists where all references should
+appear in long form.
+
+`.full-citation` divs and `full-citation-all: true` can be combined freely;
+divs are processed first and take precedence.
+
+## 4. `full-citation-suppress-bibliography`
+
+Pandoc normally appends a complete reference list at the end of the
+document. This example sets `full-citation-suppress-bibliography: true`, so
+no such list appears below this section.
+
+Change it to `false` and re-render to see the trailing list.
+
+> **Note:** Do *not* use Pandoc's own `suppress-bibliography: true` —
+> that disables citeproc internally and prevents the extension from building
+> its citation map.
+
+## 5. `full-citation-attachments`
+
+When `full-citation-attachments: true` (the default), the extension reads
+the `file` field of each bib entry, copies any PDF to a
+`{bib-name}-attachments/` subdirectory next to the HTML output, and appends
+a `[PDF]` link after the formatted citation.
+
+The entries in sections 1 and 2 above illustrate this. Set
+`full-citation-attachments: false` to disable PDF copying and `[PDF]` links
+while keeping `[online]` links.
+
+### Common option combinations
+
+| `suppress-bibliography` | `attachments` | `full-citation-all` | Typical use case |
+|:-:|:-:|:-:|---|
+| `true` | `true` | `false` | Annotated bibliography with PDF links |
+| `true` | `false` | `true` | Syllabus — every `[@key]` expands inline |
+| `false` | `true` | `false` | Reading list — inline divs + trailing ref list |
+| `true` | `false` | `false` | Clean HTML without PDFs or trailing list |
