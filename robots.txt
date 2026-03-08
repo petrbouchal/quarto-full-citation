@@ -1,0 +1,1 @@
+Sitemap: https://petrbouchal.github.io/quarto-full-citation/sitemap.xml

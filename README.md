@@ -7,7 +7,7 @@ A Quarto extension that inserts **full formatted citations inline** with the opt
 - Formatting is done entirely by **citeproc** using any standard CSL file.
 - Pure Pandoc + Lua — no R, no Python.
 
-See also [Zotero plugin]() that does the same thing without Quarto, with less customisation.
+See also [Zotero plugin](https://github.com/petrbouchal/zotero-biblio-html) that does the same thing without Quarto, with less customisation.
 
 ## Installation
 
