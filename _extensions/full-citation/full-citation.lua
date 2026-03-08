@@ -122,14 +122,44 @@ end
 
 local function copy_file(src, dest)
   local f = io.open(src, "rb"); if not f then return false end
-  local data = f:read("*all"); f:close()
-  local g = io.open(dest, "wb"); if not g then return false end
-  g:write(data); g:close(); return true
+  local g = io.open(dest, "wb")
+  if not g then f:close(); return false end
+  while true do
+    local chunk = f:read(65536)
+    if not chunk then break end
+    g:write(chunk)
+  end
+  f:close(); g:close(); return true
 end
 
 local function ensure_dir(path)
-  -- POSIX mkdir -p; works on macOS and Linux.
-  os.execute(string.format("mkdir -p '%s'", path:gsub("'", "'\\''")))
+  pandoc.system.make_directory(path, true)
+end
+
+-- Returns a validated, resolved filesystem path for an attachment file,
+-- or nil + an error string.
+-- Rules: no ".." traversal; .pdf extension only; absolute paths must have an
+-- absolute bib_dir and be located within it.
+local function safe_attachment_path(raw_path, bib_dir)
+  if raw_path:match("^%.%.[/\\]") or raw_path:match("[/\\]%.%.[/\\]")
+     or raw_path:match("[/\\]%.%.$") or raw_path == ".." then
+    return nil, "path traversal (..) not allowed"
+  end
+  if not raw_path:lower():match("%.pdf$") then
+    return nil, "only .pdf attachments are supported"
+  end
+  -- Absolute path (Unix: /... or Windows: C:\... / C:/...): use as-is.
+  -- Needed for Zotero/JabRef users whose PDFs live on network drives or cloud
+  -- storage and are stored with absolute paths in the bib file.
+  if raw_path:match("^[/\\]") or raw_path:match("^%a:[/\\]") then
+    return raw_path
+  end
+  return bib_dir .. "/" .. raw_path
+end
+
+-- Returns true only for http/https/doi URL schemes.
+local function is_safe_url(url)
+  return url:match("^https?://") ~= nil or url:match("^doi:") ~= nil
 end
 
 
@@ -278,11 +308,11 @@ function Pandoc(doc)
 
     -- [PDF] – HTML output only, when attachments are enabled
     if is_html and attach_enabled and entry.path then
-      local src = entry.path
-      if not file_exists(src) then
-        src = (entry.bib_dir or ".") .. "/" .. entry.path
-      end
-      if file_exists(src) then
+      local src, err = safe_attachment_path(entry.path, entry.bib_dir or ".")
+      if not src then
+        io.stderr:write("[full-citation] Warning: skipping attachment for '"
+                        .. key .. "': " .. err .. "\n")
+      elseif file_exists(src) then
         local attach_dir_name = (entry.bib_name or "bib") .. "-attachments"
         local attach_dir      = out_dir .. "/" .. attach_dir_name
         local name            = basename(src)
@@ -308,10 +338,15 @@ function Pandoc(doc)
       end
     end
 
-    -- [online] – all output formats, when url field exists
+    -- [online] – all output formats, when url field exists and scheme is safe
     if entry.url then
-      links:insert(pandoc.Space())
-      links:insert(pandoc.Link({pandoc.Str("[online]")}, entry.url, entry.url))
+      if is_safe_url(entry.url) then
+        links:insert(pandoc.Space())
+        links:insert(pandoc.Link({pandoc.Str("[online]")}, entry.url, entry.url))
+      else
+        io.stderr:write("[full-citation] Warning: skipping unsafe URL for '"
+                        .. key .. "': " .. entry.url .. "\n")
+      end
     end
 
     return links

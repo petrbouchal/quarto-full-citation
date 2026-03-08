@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(quarto:*)",
+      "Bash(pandoc --version)",
+      "Bash(test_order.qmd:*)",
+      "Bash(do:*)",
+      "Bash(quarto render:*)",
+      "Bash(python3:*)",
+      "Bash(chmod +x:*)",
+      "Bash(rm:*)",
+      "WebSearch",
+      "WebFetch(domain:forums.zotero.org)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(unzip:*)",
+      "Read",
+      "Edit",
+      "MultiEdit",
+      "Bash(git status)",
+      "Bash(npm run *)",
+      "Bash(ls *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)"
+    ]}
+}

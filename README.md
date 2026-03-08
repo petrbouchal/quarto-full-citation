@@ -1,20 +1,20 @@
 # quarto-full-citation
 
-A Quarto extension that inserts **full formatted citations inline** — ideal for
-annotated bibliographies, syllabi, and reading lists.
+A Quarto extension that inserts **full formatted citations inline** with the option of packaging PDF attachements — ideal for sharing annotated bibliographies, syllabi, and reading lists.
 
+- HTML output: PDFs referenced in the bib `file` field are copied to the output directory and a **[PDF]** link is appended.
+- Input is any `.bib` / `.bibtex` file specified in the `bibliography` YAML field.
 - Formatting is done entirely by **citeproc** using any standard CSL file.
-- Input is any `.bib` / `.bibtex` file specified in `bibliography`.
-- HTML output: PDFs referenced in the bib `file` field are copied to the
-  output directory and a **[PDF]** link is appended.
 - Pure Pandoc + Lua — no R, no Python.
+
+See also [Zotero plugin]() that does the same thing without Quarto, with less customisation.
 
 ## Installation
 
 Copy `_extensions/full-citation/` into your project, or install from GitHub:
 
 ```bash
-quarto install extension <user>/quarto-full-citation
+quarto install extension petrbouchal/quarto-full-citation
 ```
 
 ## Front matter
