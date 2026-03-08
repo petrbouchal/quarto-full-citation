@@ -1,0 +1,10 @@
+project:
+  type: website
+website:
+  title: "Your Extension Name"
+  navbar:
+    left:
+      - href: README.md
+        text: Home
+      - href: example.qmd
+        text: Example
