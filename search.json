@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "example.html",
+    "href": "example.html",
+    "title": "full-citation — demonstration",
+    "section": "",
+    "text": "This document demonstrates all three front-matter options of the full-citation extension. Each option is set in the YAML above; the sections below show what each one does and how they interact."
+  },
+  {
+    "objectID": "example.html#full-citation-div",
+    "href": "example.html#full-citation-div",
+    "title": "full-citation — demonstration",
+    "section": "1. .full-citation div",
+    "text": "1. .full-citation div\nWrap [@citekey] in a .full-citation fenced div to render the full formatted citation in place of the div.\nEntry with a URL and a PDF attachment — produces [online] and [PDF] links in HTML output:\nPštross, Karolína, Stuart Firestein, Paulo V. Almeida, and Natalia Pasternak. 2025. “Science Advice at the Top: A Global Overview of Chief Science Advisor Model in Governance.” Science and Public Policy, November 17, scaf072. https://doi.org/10.1093/scipol/scaf072. [PDF] [online]\nEntry with a URL but no attached PDF — produces [online] only:\nGoldfield, Gary S., Marcus V. V. Lopes, Wardah Mahboob, Sabrina Perry, and Christopher G. Davis. 2026. “Reducing Social Media Use Decreases Loneliness Regardless of Gender or Level of Social Comparisons in Youth with Anxiety and Depression: A Randomized Controlled Trial.” Journal of Affective Disorders 403 (February): 121331. https://doi.org/10.1016/j.jad.2026.121331.\nEntry with a PDF attachment but no URL — produces [PDF] only:\nSchillemans, Thomas. n.d. Struggling Out of the Garbage Can. [PDF]"
+  },
+  {
+    "objectID": "example.html#ref-attribute",
+    "href": "example.html#ref-attribute",
+    "title": "full-citation — demonstration",
+    "section": "2. ref= attribute",
+    "text": "2. ref= attribute\nUse ref= when you do not want a cite key inside the div body. The key must be known to citeproc — here nocite: \"@*\" in the front matter covers it.\nAsirvatham, Hemanth, Elliott Mokski, and Andrei Shleifer. 2026. “GPT as a Measurement Tool.” Working Paper 34834. Pre-published February. https://doi.org/10.3386/w34834. [PDF] [online]\nImpact of Human Resource Management: An Evidence Review. n.d. https://www.cipd.org/en/knowledge/evidence-reviews/impact-hr-management/. [PDF] [online]"
+  },
+  {
+    "objectID": "example.html#full-citation-all",
+    "href": "example.html#full-citation-all",
+    "title": "full-citation — demonstration",
+    "section": "3. full-citation-all",
+    "text": "3. full-citation-all\nWith the current setting (full-citation-all: false), a regular inline citation like (Simon 1998) renders as a short author-date string.\nChange the option to full-citation-all: true and every [@key] in the document — including the one in the sentence above — is automatically expanded to a full inline citation. No .full-citation div is needed. This is useful for syllabi or reading lists where all references should appear in long form.\n.full-citation divs and full-citation-all: true can be combined freely; divs are processed first and take precedence."
+  },
+  {
+    "objectID": "example.html#full-citation-suppress-bibliography",
+    "href": "example.html#full-citation-suppress-bibliography",
+    "title": "full-citation — demonstration",
+    "section": "4. full-citation-suppress-bibliography",
+    "text": "4. full-citation-suppress-bibliography\nPandoc normally appends a complete reference list at the end of the document. This example sets full-citation-suppress-bibliography: true, so no such list appears below this section.\nChange it to false and re-render to see the trailing list.\n\nNote: Do not use Pandoc’s own suppress-bibliography: true — that disables citeproc internally and prevents the extension from building its citation map."
+  },
+  {
+    "objectID": "example.html#full-citation-attachments",
+    "href": "example.html#full-citation-attachments",
+    "title": "full-citation — demonstration",
+    "section": "5. full-citation-attachments",
+    "text": "5. full-citation-attachments\nWhen full-citation-attachments: true (the default), the extension reads the file field of each bib entry, copies any PDF to a {bib-name}-attachments/ subdirectory next to the HTML output, and appends a [PDF] link after the formatted citation.\nThe entries in sections 1 and 2 above illustrate this. Set full-citation-attachments: false to disable PDF copying and [PDF] links while keeping [online] links.\n\nCommon option combinations\n\n\n\n\n\n\n\n\n\nsuppress-bibliography\nattachments\nfull-citation-all\nTypical use case\n\n\n\n\ntrue\ntrue\nfalse\nAnnotated bibliography with PDF links\n\n\ntrue\nfalse\ntrue\nSyllabus — every [@key] expands inline\n\n\nfalse\ntrue\nfalse\nReading list — inline divs + trailing ref list\n\n\ntrue\nfalse\nfalse\nClean HTML without PDFs or trailing list"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "A Quarto extension that inserts full formatted citations inline with the option of packaging PDF attachements — ideal for sharing annotated bibliographies, syllabi, and reading lists.\n\nHTML output: PDFs referenced in the bib file field are copied to the output directory and a [PDF] link is appended.\nInput is any .bib / .bibtex file specified in the bibliography YAML field.\nFormatting is done entirely by citeproc using any standard CSL file.\nPure Pandoc + Lua — no R, no Python.\n\nSee also Zotero plugin that does the same thing without Quarto, with less customisation.\n\n\nCopy _extensions/full-citation/ into your project, or install from GitHub:\nquarto install extension petrbouchal/quarto-full-citation\n\n\n\n---\nbibliography: references.bib\ncsl: chicago-author-date.csl   # any CSL style\nnocite: \"@*\"                   # make all entries available to citeproc\nfilters:\n  - full-citation\n\n# Extension options (defaults shown):\nfull-citation-suppress-bibliography: false\nfull-citation-attachments: true\nfull-citation-all: false\n---\nnocite: \"@*\" is recommended so that citeproc processes every entry and makes it available to the extension, even if the key does not appear in the document body.\n\n\n\n\n\nControls the auto-generated reference list that Pandoc appends at the end of the document.\n\n\n\nValue\nEffect\n\n\n\n\nfalse (default)\nTrailing reference list is included.\n\n\ntrue\nTrailing reference list is removed.\n\n\n\n\nDo not use Pandoc’s own suppress-bibliography: true — that disables citeproc internally and prevents the extension from building its citation map.\n\n\n\n\nControls PDF copying and [PDF] links. Has no effect on non-HTML output formats.\n\n\n\n\n\n\n\nValue\nEffect\n\n\n\n\ntrue (default)\nReads bib file fields; copies PDFs to {bib-name}-attachments/ next to the HTML file; appends [PDF] links.\n\n\nfalse\nNo PDF copying; [PDF] links are omitted. [online] links are unaffected.\n\n\n\n\n\n\nControls whether every [@key] in the document is expanded.\n\n\n\n\n\n\n\nValue\nEffect\n\n\n\n\nfalse (default)\nOnly citations inside .full-citation divs are expanded.\n\n\ntrue\nEvery [@key] in the document is expanded to a full inline citation (analogous to LaTeX’s \\fullcite).\n\n\n\n.full-citation divs and full-citation-all: true can be mixed freely; divs are processed first.\n\n\n\n\n\n\n:::{.full-citation}\n[@citekey]\n:::\n\n\n\nUse ref= when you prefer not to place a cite key inside the div body. The key must still be known to citeproc — either via nocite in the front matter or by appearing elsewhere in the document as [@key].\n:::{.full-citation ref=\"citekey\"}\n:::\n\n\n\nWith this option set, every standard inline citation is automatically expanded:\nThe study by @author2023 shows …   ← renders as full inline citation\n\n\n\n\nBoth links are appended inline at the end of each formatted citation.\n\n\n\n\n\n\n\nLink\nCondition\n\n\n\n\n[online]\nurl field present in the bib entry\n\n\n[PDF]\nfile field present and full-citation-attachments: true\n\n\n\nSupported file field formats (JabRef / Zotero):\nfile = {:path/to/paper.pdf:PDF}\nfile = {Description:path/to/paper.pdf:application/pdf}\nfile = {/absolute/path/to/paper.pdf}\nPaths can be absolute or relative to the .bib file.\n\n\n\n\n\nFull citations with PDF links; no trailing reference list.\nnocite: \"@*\"\nfull-citation-suppress-bibliography: true\nfull-citation-attachments: true\nfull-citation-all: false\nWrite prose annotations after each .full-citation div:\n:::{.full-citation}\n[@smith2023]\n:::\n\nSmith argues that …\n\n\n\nEvery [@key] expands inline; no .full-citation divs required.\nnocite: \"@*\"\nfull-citation-suppress-bibliography: true\nfull-citation-attachments: false\nfull-citation-all: true\n\n\n\nnocite: \"@*\"\nfull-citation-suppress-bibliography: false\nfull-citation-attachments: true\nfull-citation-all: false\n\n\n\n\nquarto render example.qmd\n\n\n\n\nOnly the first citation key in a .full-citation div is used; one div per entry.\nfull-citation-all with grouped cites [@k1; @k2] expands only the first key.\nPDF attachments work for HTML output only.\nWindows absolute paths in bib file fields are not handled."
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "Copy _extensions/full-citation/ into your project, or install from GitHub:\nquarto install extension petrbouchal/quarto-full-citation"
+  },
+  {
+    "objectID": "index.html#front-matter",
+    "href": "index.html#front-matter",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "---\nbibliography: references.bib\ncsl: chicago-author-date.csl   # any CSL style\nnocite: \"@*\"                   # make all entries available to citeproc\nfilters:\n  - full-citation\n\n# Extension options (defaults shown):\nfull-citation-suppress-bibliography: false\nfull-citation-attachments: true\nfull-citation-all: false\n---\nnocite: \"@*\" is recommended so that citeproc processes every entry and makes it available to the extension, even if the key does not appear in the document body."
+  },
+  {
+    "objectID": "index.html#options",
+    "href": "index.html#options",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "Controls the auto-generated reference list that Pandoc appends at the end of the document.\n\n\n\nValue\nEffect\n\n\n\n\nfalse (default)\nTrailing reference list is included.\n\n\ntrue\nTrailing reference list is removed.\n\n\n\n\nDo not use Pandoc’s own suppress-bibliography: true — that disables citeproc internally and prevents the extension from building its citation map.\n\n\n\n\nControls PDF copying and [PDF] links. Has no effect on non-HTML output formats.\n\n\n\n\n\n\n\nValue\nEffect\n\n\n\n\ntrue (default)\nReads bib file fields; copies PDFs to {bib-name}-attachments/ next to the HTML file; appends [PDF] links.\n\n\nfalse\nNo PDF copying; [PDF] links are omitted. [online] links are unaffected.\n\n\n\n\n\n\nControls whether every [@key] in the document is expanded.\n\n\n\n\n\n\n\nValue\nEffect\n\n\n\n\nfalse (default)\nOnly citations inside .full-citation divs are expanded.\n\n\ntrue\nEvery [@key] in the document is expanded to a full inline citation (analogous to LaTeX’s \\fullcite).\n\n\n\n.full-citation divs and full-citation-all: true can be mixed freely; divs are processed first."
+  },
+  {
+    "objectID": "index.html#citation-syntax",
+    "href": "index.html#citation-syntax",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": ":::{.full-citation}\n[@citekey]\n:::\n\n\n\nUse ref= when you prefer not to place a cite key inside the div body. The key must still be known to citeproc — either via nocite in the front matter or by appearing elsewhere in the document as [@key].\n:::{.full-citation ref=\"citekey\"}\n:::\n\n\n\nWith this option set, every standard inline citation is automatically expanded:\nThe study by @author2023 shows …   ← renders as full inline citation"
+  },
+  {
+    "objectID": "index.html#pdf-and-online-links-html-output",
+    "href": "index.html#pdf-and-online-links-html-output",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "Both links are appended inline at the end of each formatted citation.\n\n\n\n\n\n\n\nLink\nCondition\n\n\n\n\n[online]\nurl field present in the bib entry\n\n\n[PDF]\nfile field present and full-citation-attachments: true\n\n\n\nSupported file field formats (JabRef / Zotero):\nfile = {:path/to/paper.pdf:PDF}\nfile = {Description:path/to/paper.pdf:application/pdf}\nfile = {/absolute/path/to/paper.pdf}\nPaths can be absolute or relative to the .bib file."
+  },
+  {
+    "objectID": "index.html#typical-configurations",
+    "href": "index.html#typical-configurations",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "Full citations with PDF links; no trailing reference list.\nnocite: \"@*\"\nfull-citation-suppress-bibliography: true\nfull-citation-attachments: true\nfull-citation-all: false\nWrite prose annotations after each .full-citation div:\n:::{.full-citation}\n[@smith2023]\n:::\n\nSmith argues that …\n\n\n\nEvery [@key] expands inline; no .full-citation divs required.\nnocite: \"@*\"\nfull-citation-suppress-bibliography: true\nfull-citation-attachments: false\nfull-citation-all: true\n\n\n\nnocite: \"@*\"\nfull-citation-suppress-bibliography: false\nfull-citation-attachments: true\nfull-citation-all: false"
+  },
+  {
+    "objectID": "index.html#rendering",
+    "href": "index.html#rendering",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "quarto render example.qmd"
+  },
+  {
+    "objectID": "index.html#known-limitations",
+    "href": "index.html#known-limitations",
+    "title": "quarto-full-citation",
+    "section": "",
+    "text": "Only the first citation key in a .full-citation div is used; one div per entry.\nfull-citation-all with grouped cites [@k1; @k2] expands only the first key.\nPDF attachments work for HTML output only.\nWindows absolute paths in bib file fields are not handled."
+  }
+]
